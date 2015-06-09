@@ -1,0 +1,24 @@
+{
+    "name": "brookinsconsulting/bcswitchadminlanguage",
+    "description": "eZ Publish Legacy kernel override class extension which provides a stable and flexible solution which allows the user to change the language of the current siteaccess on the fly. Provides for greater multilingual editor access!",
+    "type": "ezpublish-legacy-extension",
+    "keywords": [ "eZ Publish", "language", "switch", "siteaccesss", "locale", "kernel override", "locale based cacheing" ],
+    "homepage": "https://github.com/brookinsconsulting/bcswitchadminlanguage",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name" : "Brookins Consulting",
+            "homepage": "http://brookinsconsulting.com",
+            "email": "info@brookinsconsulting.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.0.0",
+        "ezsystems/ezpublish-legacy-installer": "*"
+    },
+    "extra": {
+        "ezpublish-legacy-extension-name": "bcswitchadminlanguage"
+    }
+}
