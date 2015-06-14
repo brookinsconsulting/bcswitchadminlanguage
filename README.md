@@ -1,14 +1,15 @@
 BC Switch Admin Language
 ===================
 
-This extension implements a solution to provide the ability to change the admin UI locale (language) on the fly. Provides an extension based kernel class overrides to store cache by siteacesssname + locale identifier and switch ini locale per request dynamically for just the one request.
+This extension implements a solution to provide the ability to change the administration UI locale (language) on the fly. This solution requires and provides an extension based kernel class overrides to store cache by siteaccess name + locale identifier and switch ini locale per request dynamically for just the one request.
+
 
 Version
 =======
 
 * The current version of BC Switch Admin Language is 0.1.0
 
-* Last Major update: June 08, 2015
+* Last Major update: June 14, 2015
 
 
 Copyright
@@ -70,17 +71,20 @@ The following requirements exists for using BC Switch Admin Language extension:
 * Make sure you have PHP 5.x or higher.
 
 
+Dependencies
+============
+
+How to complete the following dependencies setup (if not already provided by your installation) is covered later in the README.md documentation
+
+* This solution depends on eZ Publish Legacy's kernel class override feature is enabled in `config.php`. This documentation provides instructions how to setup this dependency in the **Installation > Enable eZ Publish Kernel Overrides** section.
+
+* This solution expects that your admin siteaccess settings are already configured to have more than one language in the `SiteLanguageList[]` settings array. This documentation provides instructions how to setup this dependency in the **Installation > Configuration** section.
+
+* This solution expects that your admin siteaccess settings are already configured to have the `TextTranslation=enabled` setting enabled. This documentation provides instructions how to setup this dependency in the **Installation > Configuration** section.
+
+
 Features
 ========
-
-### Dependencies
-
-* This solution depends on eZ Publish Legacy and kernel class overrides enabled in config.php
-
-* This solution expects that your admin siteaccess is already configured to have more than one language in the 'SiteLanguageList[]' settings array
-
-* This solution expects that you have already added additional locales using the '/content/translations' admin module view.
-
 
 ### Kernel class overrides
 
@@ -96,12 +100,16 @@ This solution overrides the following kernel classes:
 
 **Note**: This solution requires only a few legacy kernel class overrides of classes that are very stable and not subject to much change (if at all) per release (which is important for maintainability). Our changes to these classes are very minimalistic, clearly documented and only when absolutely required to support the solution.
 
-You can review our changes to the kernel classes by searching for our kernel class change documention comments (in each modified file block of code), "// BEGIN BC : BCSwitchAdminLanguage : Kernel Hack".
+You can review our changes to the kernel classes by searching for our kernel class change documentation comments (in each modified file block of code), `// BEGIN BC : BCSwitchAdminLanguage : Kernel Hack` and ends with `// END BC : BCSwitchAdminLanguage : Kernel Hack`.
 
 
 ### Module View
 
-This solution provides a module 'switchadminlanguage' view 'switch' which is used by the provided admin right side toolbar 'Switch Language' form which provides a drop down menu displaying all the languages available to the current siteaccess and allows you to select a different language, click switch button which submits a request to the switch module view, which sets a session variable containing the language locale identifier to switch the admin siteaccess language locale when the switch module redirects the user back to the previous page.
+This solution provides a module 'switchadminlanguage' view 'switch' which is used by the provided admin right side toolbar 'Switch Language' form.
+
+The 'Switch Language' form provides a drop down menu displaying all the languages available to the current siteaccess and allows you to select a different language, click switch button.
+
+Upon clicking the switch button a the form is submits a request to the switch module view, which sets a session variable containing the language locale identifier to switch the admin siteaccess language locale when the switch module redirects the user back to the previous page.
 
 
 Installation
@@ -139,6 +147,7 @@ Regenerate kernel class override autoloads (Required).
 
     php ./bin/php/ezpgenerateautoloads.php  --kernel-override;
 
+
 ### Extension Settings Override
 
 Next you must create an extension settings override and customize the admin siteaccess name (Required).
@@ -158,6 +167,45 @@ Here is an example of what it might look like in a default ezdemo based installa
 Clear eZ Publish Platform / eZ Publish Legacy caches (Required).
 
     php ./bin/php/ezcache.php --clear-all;
+
+
+Configuration
+=============
+
+### Siteaccess site.ini [RegionalSettings] SiteLanguageList[] Settings
+
+* Edit your `settings/siteaccess/(yourAdminSiteaccessName)/site.ini.append.php` settings file
+
+* Add the languages you wish to be able to use to translation the siteaccess UI into by adding them to the `SiteLanguageList[]` settings array.
+
+    * Here is a generic example of admin siteaccess settings which is configured to support translation from eng-US, fre-FR and ger-DE:
+
+    [RegionalSettings]
+    Locale=eng-US
+    ContentObjectLocale=eng-US
+    ShowUntranslatedObjects=enabled
+    SiteLanguageList[]=eng-US
+    SiteLanguageList[]=fre-FR
+    SiteLanguageList[]=ger-DE
+    TextTranslation=enabled
+
+* If your not sure what language text strings are supported review the available default translations provide by default in the [share/translations](https://github.com/ezsystems/ezpublish-legacy/tree/master/share/translations) directory.
+    * Note that the text strings representing the language name / identifiers expected in the `SiteLanguageList[]` settings array entries are the same as the `share/translations` sub directory names.
+
+* Here is some related documentation on this [https://doc.ez.no/eZ-Publish/Technical-manual/4.x/Reference/Configuration-files/site.ini/RegionalSettings/SiteLanguageList](setting).
+
+
+### Siteaccess site.ini [RegionalSettings] TextTranslation Setting
+
+* Edit your `settings/siteaccess/(yourAdminSiteaccessName)/site.ini.append.php` settings file
+
+* Check your default settings to ensure that the setting `[RegionalSettings] TextTranslation` is enabled. If it is not set or is disabled then you will need to change the setting to ensure it is specifically enabled within the siteaccess `site.ini.append.php` settings. Here is a abbreviated example:
+
+    [RegionalSettings]
+    # This line of comment represents the other required but omitted settings normally found in this settings block but not specific to this example settings snippet
+    TextTranslation=enabled
+
+* The `TextTranslation=enabled` is required as it is the setting which enables template text string translation. Here is some related documentation on this [https://doc.ez.no/eZ-Publish/Technical-manual/4.x/Reference/Configuration-files/site.ini/RegionalSettings/TextTranslation](setting).
 
 
 Usage
